@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Energy per transaction versus throughput for Bitcoin and Nexa at the same network power.">
+<title>The Denominator Chart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;500&display=swap">
+<script>(function(){var q=new URLSearchParams(location.search);if(q.has('export'))document.documentElement.setAttribute('data-export','');var t=q.get('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+:root{
+  color-scheme:light;
+  --paper:#ffffff; --ink:#212121; --ink-2:#616161; --muted:#757575;
+  --frame:#212121; --grid:#e0e0e0; --hair:rgba(0,0,0,.12);
+  --nexa:#1976d2; --btc:#ef6c00; --both:#757575;
+  --on-accent:#ffffff; --row:#fafafa; --tip:#ffffff;
+  --serif:"Old Standard TT","Latin Modern Roman","CMU Serif","Times New Roman",Times,serif;
+  --ui:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#1e1e1e; --ink:#e8e8e8; --ink-2:#bdbdbd; --muted:#9e9e9e;
+    --frame:#d0d0d0; --grid:#353535; --hair:rgba(255,255,255,.16);
+    --nexa:#2196f3; --btc:#e65100; --both:#9e9e9e;
+    --on-accent:#1e1e1e; --row:#242424; --tip:#2a2a2a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#1e1e1e; --ink:#e8e8e8; --ink-2:#bdbdbd; --muted:#9e9e9e;
+  --frame:#d0d0d0; --grid:#353535; --hair:rgba(255,255,255,.16);
+  --nexa:#2196f3; --btc:#e65100; --both:#9e9e9e;
+  --on-accent:#1e1e1e; --row:#242424; --tip:#2a2a2a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.page{max-width:860px;margin:0 auto;padding:32px 24px 56px}
+.controls{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin-bottom:16px;font-family:var(--ui)}
+.controls .lbl{font-size:12px;color:var(--muted);letter-spacing:.02em}
+.seg{display:inline-flex;border:1px solid var(--hair);border-radius:999px;overflow:hidden}
+.seg button{font:500 13px/1 var(--ui);color:var(--ink-2);background:transparent;border:0;padding:9px 16px;cursor:pointer;letter-spacing:.01em}
+.seg button+button{border-left:1px solid var(--hair)}
+.seg button[aria-checked="true"]{background:var(--ink);color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--nexa);outline-offset:-2px}
+figure{margin:0}
+.fig{position:relative;overflow-x:auto}
+.fig svg{display:block;width:100%;min-width:720px;height:auto}
+.fig svg:focus-visible{outline:2px solid var(--nexa);outline-offset:6px}
+figcaption{margin:14px 8px 0;font-size:14.5px;line-height:1.55;color:var(--ink);text-align:justify;hyphens:auto}
+figcaption b{font-weight:700}
+.hint{margin:10px 8px 0;font:12px/1.4 var(--ui);color:var(--muted)}
+/* svg text */
+.tick{font:12.5px var(--serif);fill:var(--ink)}
+.sup{font-size:8.5px}
+.axl{font:14px var(--serif);fill:var(--ink)}
+.ann{font:12.5px var(--serif);fill:var(--ink)}
+.ann-i{font:italic 12.5px var(--serif);fill:var(--ink-2)}
+.ann-b{font:700 16px var(--serif);fill:var(--ink)}
+.leg{font:12.5px var(--serif);fill:var(--ink)}
+.grid{stroke:var(--grid);stroke-width:.8}
+.frame{fill:none;stroke:var(--frame);stroke-width:.9}
+.tk{stroke:var(--frame);stroke-width:.9}
+.l{fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.l-nexa{stroke:var(--nexa)} .l-btc{stroke:var(--btc)} .l-both{stroke:var(--both)} .l-proj{stroke:var(--nexa);stroke-dasharray:5 3.5}
+.leader{stroke:var(--ink-2);stroke-width:.7;fill:none}
+.bracket{stroke:var(--ink);stroke-width:.8;fill:none}
+.legbox{fill:var(--paper);stroke:var(--frame);stroke-width:.8}
+.xhair{stroke:var(--ink-2);stroke-width:.7;stroke-dasharray:2 2}
+.hit{fill:transparent;cursor:crosshair}
+svg [hidden]{display:none}
+.tip{position:absolute;pointer-events:none;background:var(--tip);border:1px solid var(--hair);border-radius:4px;padding:8px 12px;box-shadow:0 2px 8px rgba(0,0,0,.14);min-width:180px;font:12.5px/1.5 var(--ui);color:var(--ink-2)}
+.tip-h{font-size:11px;color:var(--muted);letter-spacing:.03em;margin-bottom:2px}
+.tip-row{display:flex;align-items:center;gap:8px}
+.tip-row strong{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums;min-width:70px}
+.tip-row .key{display:inline-block;width:14px;height:0;border-top:2px solid var(--both)}
+.tip-row .key-nexa{border-color:var(--nexa)} .tip-row .key-btc{border-color:var(--btc)}
+.tip-r{margin-top:4px;padding-top:4px;border-top:1px solid var(--hair);color:var(--ink)}
+/* material data table */
+.tablewrap{margin:32px 0 0;overflow-x:auto;font-family:var(--ui)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{font-weight:500;font-size:12px;color:var(--muted);text-align:left;padding:0 16px 10px 0;border-bottom:1px solid var(--frame)}
+td{padding:11px 16px 11px 0;border-bottom:1px solid var(--grid);vertical-align:middle;color:var(--ink)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:10px;vertical-align:-1px}
+td .sw-nexa{background:var(--nexa)} td .sw-btc{background:var(--btc)}
+td .st{font-size:11.5px;color:var(--muted);margin-left:8px}
+.src{margin:12px 0 0;font:12px/1.5 var(--ui);color:var(--muted)}
+/* export: figure + caption only, 1200px wide */
+[data-export] .page{max-width:none;width:1200px;padding:28px 36px 24px}
+[data-export] .controls,[data-export] .hint,[data-export] .tablewrap{display:none}
+[data-export] .fig svg{min-width:0}
+[data-export] figcaption{font-size:15.5px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="controls">
+    <span class="lbl">Network consumption</span>
+    <div class="seg" role="radiogroup" aria-label="Network electricity estimate">
+      <button type="button" role="radio" aria-checked="true" data-e="138">138 TWh/yr · Cambridge</button>
+      <button type="button" role="radio" aria-checked="false" data-e="204">204 TWh/yr · Digiconomist</button>
+    </div>
+  </div>
+
+  <figure>
+    <div class="fig" id="fig">
+      <svg id="chart" viewBox="0 0 900 580" role="img" tabindex="0" aria-labelledby="figtitle figdesc">
+        <title id="figtitle">Energy per transaction versus throughput for Bitcoin and Nexa, log–log</title>
+        <desc id="figdesc">Both chains share one line up to Bitcoin's throughput cap near 7 transactions per second. Bitcoin then stays flat at about 580 kWh per transaction. Nexa continues along one over TPS: 0.104 kWh at 42 000 TPS and 0.044 kWh at 100 000 TPS with Blitz. Values are repeated in the table below the figure.</desc>
+        <g id="layer"></g>
+        <g id="hover" hidden>
+          <line id="xhair" class="xhair"/>
+          <circle id="hN" r="4" fill="var(--nexa)" stroke="var(--paper)" stroke-width="1.5"/>
+          <circle id="hB" r="4" fill="var(--btc)" stroke="var(--paper)" stroke-width="1.5"/>
+        </g>
+        <rect id="hit" class="hit"/>
+      </svg>
+      <div class="tip" id="tip" hidden>
+        <div class="tip-h" id="tipTps"></div>
+        <div class="tip-row"><span class="key key-nexa"></span><strong id="tipN"></strong><span>Nexa</span></div>
+        <div class="tip-row"><span class="key key-btc"></span><strong id="tipB"></strong><span id="tipBl">Bitcoin</span></div>
+        <div class="tip-r" id="tipR"></div>
+      </div>
+    </div>
+    <figcaption id="caption"></figcaption>
+  </figure>
+  <p class="hint">Hover or focus the figure and use ← → to read any throughput.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Chain</th><th class="num">Throughput [TPS]</th><th class="num" id="thKwh">Energy per tx [kWh]</th><th class="num">Relative to Bitcoin</th><th>Everyday equivalent</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sw sw-btc"></span>Bitcoin<span class="st">measured</span></td><td class="num">7.5</td><td class="num" id="tBtc"></td><td class="num">1×</td><td id="eBtc"></td></tr>
+        <tr><td><span class="sw sw-nexa"></span>Nexa<span class="st">benchmarked</span></td><td class="num" id="tpsNow"></td><td class="num" id="tNow"></td><td class="num" id="rNow"></td><td id="eNow"></td></tr>
+        <tr><td><span class="sw sw-nexa"></span>Nexa with Blitz<span class="st">projected</span></td><td class="num" id="tpsBl"></td><td class="num" id="tBl"></td><td class="num" id="rBl"></td><td id="eBl"></td></tr>
+      </tbody>
+    </table>
+    <p class="src">Bitcoin's busiest day (10.3 TPS) corresponds to 425 kWh per transaction and its theoretical 14 TPS ceiling to 313 kWh. Sources: Cambridge CBECI, Digiconomist, Blockchair, 2026.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var NB = ' '; // narrow no-break space as thousands separator
+  var SPY = 365*86400;
+  var EST = {
+    138:{src:'Cambridge CBECI', home:'two weeks of home electricity', now:'five phone charges', phone:'two phone charges'},
+    204:{src:'Digiconomist', home:'three weeks of home electricity', now:'eight phone charges', phone:'three phone charges'}
+  };
+  var BTC_TPS=7.5, NEXA_NOW=42000, NEXA_BLITZ=100000;
+  var energy = 138;
+
+  var W=900, H=580, M={l:72,r:22,t:18,b:58};
+  var PW=W-M.l-M.r, PH=H-M.t-M.b;
+  var XD=[0,6], YD=[-2,4];
+  var lg = Math.log10;
+  var sx = function(v){ return M.l + (lg(v)-XD[0])/(XD[1]-XD[0])*PW; };
+  var sy = function(v){ return M.t + (YD[1]-lg(v))/(YD[1]-YD[0])*PH; };
+  var kOf = function(){ return energy*1e9/SPY; };
+  var kwh = function(tps){ return kOf()/tps; };
+
+  function group(n){ return Math.round(n).toLocaleString('en-US').replace(/,/g, NB); }
+  function roundSf(v, sf){ if(v===0) return 0; var p=Math.pow(10, Math.floor(lg(Math.abs(v)))-(sf-1)); return Math.round(v/p)*p; }
+  function fmtKwh(v, sf){
+    sf = sf||2;
+    if (v >= 100) return group(roundSf(v, sf));
+    if (v >= 10) return v.toFixed(1);
+    if (v >= 1) return v.toFixed(2);
+    return v.toFixed(3);
+  }
+  function fmtRatio(r){ return group(roundSf(r,2))+'×'; }
+  function fmtTps(t){ return t>=100 ? group(t) : t>=10 ? t.toFixed(1) : t.toFixed(2); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+  function text(x,y,str,cls,anchor){ return '<text x="'+x+'" y="'+y+'" class="'+cls+'"'+(anchor?' text-anchor="'+anchor+'"':'')+'>'+esc(str)+'</text>'; }
+  function pow10(x,y,d,anchor){ var e = (d<0?'−':'')+Math.abs(d); return '<text x="'+x+'" y="'+y+'" class="tick" text-anchor="'+anchor+'">10<tspan class="sup" dy="-5">'+e+'</tspan></text>'; }
+
+  function render(){
+    var K = kOf(), E = EST[energy];
+    var xK = sx(BTC_TPS), yK = sy(kwh(BTC_TPS));
+    var xN = sx(NEXA_NOW), yN = sy(kwh(NEXA_NOW));
+    var xB = sx(NEXA_BLITZ), yB = sy(kwh(NEXA_BLITZ));
+    var right = M.l+PW, bottom = M.t+PH;
+    var s = '', d, m, x, y;
+
+    // major grid
+    for (d=YD[0]; d<=YD[1]; d++){ y=sy(Math.pow(10,d)); s+='<line class="grid" x1="'+M.l+'" x2="'+right+'" y1="'+y+'" y2="'+y+'"/>'; }
+    for (d=XD[0]; d<=XD[1]; d++){ x=sx(Math.pow(10,d)); s+='<line class="grid" x1="'+x+'" x2="'+x+'" y1="'+M.t+'" y2="'+bottom+'"/>'; }
+
+    // series
+    s+='<path class="l l-both" d="M'+sx(1)+' '+sy(K)+' L'+xK+' '+yK+'"/>';
+    s+='<path class="l l-btc" d="M'+xK+' '+yK+' L'+right+' '+yK+'"/>';
+    s+='<path class="l l-nexa" d="M'+xK+' '+yK+' L'+xN+' '+yN+'"/>';
+    s+='<path class="l l-proj" d="M'+xN+' '+yN+' L'+xB+' '+yB+'"/>';
+
+    // frame + inward ticks on all four sides
+    s+='<rect class="frame" x="'+M.l+'" y="'+M.t+'" width="'+PW+'" height="'+PH+'"/>';
+    function tickX(xx,len){ return '<line class="tk" x1="'+xx+'" x2="'+xx+'" y1="'+bottom+'" y2="'+(bottom-len)+'"/><line class="tk" x1="'+xx+'" x2="'+xx+'" y1="'+M.t+'" y2="'+(M.t+len)+'"/>'; }
+    function tickY(yy,len){ return '<line class="tk" y1="'+yy+'" y2="'+yy+'" x1="'+M.l+'" x2="'+(M.l+len)+'"/><line class="tk" y1="'+yy+'" y2="'+yy+'" x1="'+right+'" x2="'+(right-len)+'"/>'; }
+    for (d=XD[0]; d<=XD[1]; d++){ x=sx(Math.pow(10,d)); s+=tickX(x,6); s+=pow10(x, bottom+19, d, 'middle'); if(d<XD[1]) for(m=2;m<10;m++) s+=tickX(sx(m*Math.pow(10,d)),3); }
+    for (d=YD[0]; d<=YD[1]; d++){ y=sy(Math.pow(10,d)); s+=tickY(y,6); s+=pow10(M.l-9, y+4, d, 'end'); if(d<YD[1]) for(m=2;m<10;m++) s+=tickY(sy(m*Math.pow(10,d)),3); }
+    s+=text(M.l+PW/2, H-12, 'Throughput [TPS]', 'axl', 'middle');
+    s+='<text class="axl" text-anchor="middle" transform="translate(20 '+(M.t+PH/2)+') rotate(-90)">Energy per transaction [kWh]</text>';
+
+    // bracket at 100 000 TPS
+    s+='<path class="bracket" d="M'+(xB-4)+' '+(yK+9)+' h8 M'+xB+' '+(yK+9)+' V'+(yB-11)+' M'+(xB-4)+' '+(yB-11)+' h8"/>';
+    var yMid=(yK+yB)/2;
+    s+=text(xB+10, yMid+2, fmtRatio(NEXA_BLITZ/BTC_TPS), 'ann-b');
+    s+=text(xB+10, yMid+18, 'less energy per tx', 'ann-i');
+
+    // markers
+    s+='<circle cx="'+xK+'" cy="'+yK+'" r="3.6" fill="var(--btc)"/>';
+    s+='<circle cx="'+xN+'" cy="'+yN+'" r="3.6" fill="var(--nexa)"/>';
+    s+='<circle cx="'+xB+'" cy="'+yB+'" r="3.4" fill="var(--paper)" stroke="var(--nexa)" stroke-width="1.6"/>';
+
+    // pins
+    s+='<path class="leader" d="M'+(xK+5)+' '+(yK-5)+' L'+(xK+26)+' '+(yK-24)+'"/>';
+    s+=text(xK+30, yK-26, 'Bitcoin, 7.5 TPS: '+fmtKwh(kwh(BTC_TPS))+' kWh/tx', 'ann');
+    s+=text(right-8, yK-8, fmtKwh(kwh(BTC_TPS))+' kWh/tx regardless of demand', 'ann-i', 'end');
+    s+='<path class="leader" d="M'+(xN-4)+' '+(yN+4)+' L'+(xN-16)+' '+(yN+16)+'"/>';
+    s+=text(xN-20, yN+21, 'Nexa, '+group(NEXA_NOW)+' TPS: '+fmtKwh(kwh(NEXA_NOW))+' kWh/tx', 'ann', 'end');
+    s+=text(xB+12, yB-8, 'Nexa + Blitz,', 'ann');
+    s+=text(xB+12, yB+6, group(NEXA_BLITZ)+' TPS:', 'ann');
+    s+=text(xB+12, yB+20, fmtKwh(kwh(NEXA_BLITZ))+' kWh/tx', 'ann');
+
+    // legend (inside, south west)
+    var lw=214, lh=80, lx=M.l+16, ly=bottom-16-lh;
+    s+='<rect class="legbox" x="'+lx+'" y="'+ly+'" width="'+lw+'" height="'+lh+'"/>';
+    var rows=[['l-btc','Bitcoin (capped at ≈ 7 TPS)'],['l-nexa','Nexa'],['l-proj','Nexa + Blitz (projected)'],['l-both','Both chains, below the cap']];
+    rows.forEach(function(r,i){ var yy=ly+14+i*17; s+='<path class="l '+r[0]+'" d="M'+(lx+10)+' '+yy+' h26"/>'; s+=text(lx+44, yy+4, r[1], 'leg'); });
+
+    document.getElementById('layer').innerHTML = s;
+
+    // caption + table
+    var kStr = group(K);
+    var cap = document.getElementById('caption');
+    cap.textContent = '';
+    var b = document.createElement('b'); b.textContent = 'Figure 1. ';
+    cap.appendChild(b);
+    cap.appendChild(document.createTextNode('Energy per transaction as a function of throughput for Bitcoin and Nexa at the same network consumption, '+energy+' TWh/yr ('+E.src+'), so that E = '+kStr+' kWh ÷ TPS. Below Bitcoin’s throughput cap the two chains coincide. Beyond it Bitcoin remains at '+fmtKwh(kwh(BTC_TPS))+' kWh per transaction, whereas Nexa follows 1/TPS to '+fmtKwh(kwh(NEXA_NOW))+' kWh at '+group(NEXA_NOW)+' TPS (benchmarked) and '+fmtKwh(kwh(NEXA_BLITZ))+' kWh at '+group(NEXA_BLITZ)+' TPS with Blitz (projected), a factor of '+fmtRatio(NEXA_BLITZ/BTC_TPS)+' that is independent of the consumption estimate. Log–log axes.'));
+    document.getElementById('tBtc').textContent = fmtKwh(kwh(BTC_TPS));
+    document.getElementById('tNow').textContent = fmtKwh(kwh(NEXA_NOW));
+    document.getElementById('tBl').textContent = fmtKwh(kwh(NEXA_BLITZ));
+    document.getElementById('tpsNow').textContent = group(NEXA_NOW);
+    document.getElementById('tpsBl').textContent = group(NEXA_BLITZ);
+    document.getElementById('rNow').textContent = fmtRatio(NEXA_NOW/BTC_TPS)+' less';
+    document.getElementById('rBl').textContent = fmtRatio(NEXA_BLITZ/BTC_TPS)+' less';
+    document.getElementById('eBtc').textContent = E.home;
+    document.getElementById('eNow').textContent = E.now;
+    document.getElementById('eBl').textContent = E.phone;
+    document.getElementById('thKwh').textContent = 'Energy per tx at '+energy+' TWh/yr [kWh]';
+  }
+
+  var seg = document.querySelector('.seg');
+  seg.addEventListener('click', function(e){
+    var btn = e.target.closest('button[data-e]'); if(!btn) return;
+    energy = +btn.dataset.e;
+    seg.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-checked', b===btn ? 'true' : 'false'); });
+    render(); hideTip();
+  });
+
+  var svg = document.getElementById('chart'), fig = document.getElementById('fig');
+  var hover = document.getElementById('hover'), tip = document.getElementById('tip');
+  var xhair = document.getElementById('xhair'), hN = document.getElementById('hN'), hB = document.getElementById('hB');
+  var hit = document.getElementById('hit');
+  hit.setAttribute('x', M.l); hit.setAttribute('y', M.t); hit.setAttribute('width', PW); hit.setAttribute('height', PH);
+  xhair.setAttribute('y1', M.t); xhair.setAttribute('y2', M.t+PH);
+
+  function showAt(vx, clientY){
+    vx = Math.max(M.l, Math.min(M.l+PW, vx));
+    var tps = Math.pow(10, XD[0] + (vx-M.l)/PW*(XD[1]-XD[0]));
+    var n = kwh(tps), bt = kwh(Math.min(tps, BTC_TPS));
+    var below = tps <= BTC_TPS, beyond = tps > NEXA_BLITZ;
+    xhair.setAttribute('x1', vx); xhair.setAttribute('x2', vx);
+    hB.setAttribute('cx', vx); hB.setAttribute('cy', sy(bt));
+    hN.setAttribute('cx', vx); hN.setAttribute('cy', sy(n));
+    hN.hidden = beyond || below;
+    hover.hidden = false;
+    document.getElementById('tipTps').textContent = fmtTps(tps)+' TPS';
+    document.getElementById('tipN').textContent = beyond ? '—' : fmtKwh(n,3)+' kWh';
+    document.getElementById('tipB').textContent = fmtKwh(bt,3)+' kWh';
+    document.getElementById('tipBl').textContent = below ? 'Bitcoin' : 'Bitcoin (capped at 7.5 TPS)';
+    document.getElementById('tipR').textContent = beyond ? 'Nexa not projected beyond 100 000 TPS' : below ? 'Identical below the cap' : 'Nexa uses '+fmtRatio(tps/BTC_TPS)+' less per transaction';
+    tip.hidden = false;
+    var ctm = svg.getScreenCTM(), fr = fig.getBoundingClientRect();
+    var p = new DOMPoint(vx, M.t).matrixTransform(ctm);
+    var left = p.x - fr.left + 14, top = (clientY==null ? p.y + 10 : clientY - fr.top - 12);
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    if (left + tw > fr.width - 8) left = p.x - fr.left - 14 - tw;
+    top = Math.max(4, Math.min(fr.height - th - 4, top));
+    tip.style.left = left+'px'; tip.style.top = top+'px';
+  }
+  function hideTip(){ hover.hidden = true; tip.hidden = true; }
+  hit.addEventListener('pointermove', function(e){
+    var p = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse());
+    kbPos = (p.x-M.l)/PW*(XD[1]-XD[0]);
+    showAt(p.x, e.clientY);
+  });
+  hit.addEventListener('pointerleave', hideTip);
+  var kbPos = lg(NEXA_NOW);
+  svg.addEventListener('keydown', function(e){
+    var step = e.shiftKey ? 1 : 0.1;
+    if (e.key==='ArrowRight') kbPos = Math.min(XD[1], kbPos+step);
+    else if (e.key==='ArrowLeft') kbPos = Math.max(XD[0], kbPos-step);
+    else if (e.key==='Home') kbPos = XD[0];
+    else if (e.key==='End') kbPos = XD[1];
+    else if (e.key==='Escape') { hideTip(); return; }
+    else return;
+    e.preventDefault();
+    showAt(M.l + kbPos/(XD[1]-XD[0])*PW, null);
+  });
+  svg.addEventListener('blur', hideTip);
+
+  render();
+})();
+</script>
+</body>
+</html>
