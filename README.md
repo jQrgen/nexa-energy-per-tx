@@ -45,6 +45,11 @@ Every push to `main` runs `.github/workflows/pages.yml`, which uploads the repos
 static site and deploys it to GitHub Pages. No build step: the page is a single HTML file with
 inline CSS and JavaScript, and loads its fonts (Old Standard TT, Roboto) from Google Fonts.
 
+One-time setup for a fresh fork or clone: in the repository settings open **Pages** and set
+*Build and deployment → Source* to **GitHub Actions**. The workflow asks GitHub to enable Pages
+by itself, but the default `GITHUB_TOKEN` is not allowed to do that on a user repository, so the
+first run fails until Pages has been switched on once. Re-run the workflow after that.
+
 ## Sources
 
 Cambridge CBECI, Digiconomist, Blockchair, 2026. Nexa's 42 000 TPS is benchmarked;
