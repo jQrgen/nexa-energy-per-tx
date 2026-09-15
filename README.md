@@ -44,16 +44,17 @@ four gridlines and looks far smaller than it is.
 
 ## Files
 
-- `index.html` – the interactive figure. Hover or focus the plot and use ← → to read any
-  throughput. Values are also in
-  the table below the figure. The **Download SVG** and **Download PNG** buttons save the figure
-  as shown, with the fonts embedded (PNG at 3×, 2700 × 1740).
-- `export/nexa-vs-bitcoin-energy-per-tx.png` – static light version (2400 × 1780) for articles.
-- `export/nexa-vs-bitcoin-energy-per-tx-dark.png` – dark variant.
-- `scripts/render-png.sh` – regenerates both PNGs from `index.html` with headless Chrome.
+- `index.html` – two interactive figures: Figure 1 on log–log axes, Figure 2 the same data on
+  linear axes. Hover or focus a plot and use ← → to read any throughput. Values are also in
+  the table below the figures. Each figure has **Download SVG** and **Download PNG** buttons that
+  save it as shown, with the fonts embedded (PNG at 3×, 2700 × 1740).
+- `export/nexa-vs-bitcoin-energy-per-tx.png` – Figure 1 (log–log), light, 2400 px wide, for articles.
+- `export/nexa-vs-bitcoin-energy-per-tx-linear.png` – Figure 2 (linear axes), light.
+- `export/…-dark.png` – dark variants of both.
+- `scripts/render-png.sh` – regenerates all four PNGs from `index.html` with headless Chrome.
 
-Query parameters on the page: `?export=1` shows only the figure and caption at 1200 px wide;
-`&theme=light` or `&theme=dark` forces a theme.
+Query parameters on the page: `?export=1` shows only Figure 1 with its caption at 1200 px wide,
+`?export=2` only Figure 2; `&theme=light` or `&theme=dark` forces a theme.
 
 ## Deployment
 
