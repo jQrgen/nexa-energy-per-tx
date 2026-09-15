@@ -72,17 +72,27 @@ Why Nexa's energy per transaction is lower than Bitcoin's:
   key bottlenecks in scalability: signature signing and UTXO lookups", the steps that cap
   throughput on every UTXO chain.
 
-Why less energy per transaction means less environmental impact:
+Why less energy per transaction means less environmental impact (NTNU research):
 
+- Borgelt, J., Gilad, D., May, R. and Verones, F. (NTNU Industrial Ecology Programme and NINA),
+  *Renewable energy growth amplifies land pressure on Norwegian biodiversity*, Cleaner Energy
+  Systems 13 (2026). [DOI](https://doi.org/10.1016/j.cles.2026.100238). Norway's renewable
+  build-out to 2050 "could increase the overall impact on habitat loss by as much as 28%"; "the
+  most effective way to substantially reduce biodiversity impacts is to lower electricity demand
+  through energy efficiency measures"
+  ([NTNU, May 2026](https://norwegianscitechnews.com/2026/05/location-matters-balancing-renewable-energy-and-biodiversity-in-norway/)).
+- Hertwich, E. G., Gibon, T. et al. (NTNU), *Integrated life-cycle assessment of electricity-supply
+  scenarios confirms global environmental benefit of low-carbon technologies*, PNAS 112 (20),
+  6277–6282 (2015). [DOI](https://doi.org/10.1073/pnas.1312753111). Low-carbon electricity beats
+  fossil generation by far but still carries land, material and emission footprints.
+- HighEFF (SINTEF Energy with NTNU), [*Energy efficiency first!*](https://www.sintef.no/projectweb/higheff/outreach/higheff-at-ntnu-energy-transition-week-2024-energy-efficiency-first/),
+  NTNU Energy Transition Week 2024. Norway committed at COP28 to "put the principle of energy
+  efficiency as the first fuel at the core of policymaking, planning and investment decisions";
+  "energy efficiency is a conflict-free measure that frees energy to be used for other purposes".
 - Alzoubi, Y. I. and Mishra, A. (NTNU), *Green blockchain – a move towards sustainability*,
-  Journal of Cleaner Production 430 (2023). [DOI](https://doi.org/10.1016/j.jclepro.2023.139541),
-  [NTNU Open](https://hdl.handle.net/11250/3102853). Blockchain energy use "has negative impacts on
-  both the economy and the environment"; "the main cause of concern is the generation of
-  atmospheric carbon emissions resulting from excessive energy usage".
-- NTNU Department of Energy and Process Engineering,
-  [Energy and indoor environment](https://www.ntnu.edu/ept/sustainable/energy-indoor-environment):
-  a sector's energy consumption is what makes it "crucial for achieving both national and global
-  climate targets".
+  Journal of Cleaner Production 430 (2023). [DOI](https://doi.org/10.1016/j.jclepro.2023.139541).
+  "The main cause of concern is the generation of atmospheric carbon emissions resulting from
+  excessive energy usage."
 
 ## Sources
 
