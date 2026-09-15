@@ -6,6 +6,21 @@ Nexa running on the same network power. Companion figure to the article
 
 Live page: **https://jqrgen.github.io/nexa-energy-per-tx/**
 
+## What Nexa is
+
+Nexa is a proof-of-work blockchain in the Bitcoin lineage: the same UTXO accounting and the same
+kind of mining, but engineered for throughput on the base layer, with native tokens and
+script-template contracts instead of a second layer. Its bottlenecks are the ones every UTXO chain
+hits on general-purpose CPUs, signature checks and coin lookups. Nexa benchmarks 42 000
+transactions per second today; Blitz moves those two steps onto FPGAs, with a projected 100 000.
+
+## Why this figure exists
+
+A proof-of-work network burns whatever the block reward pays for, however many transactions it
+carries, so energy per transaction is network electricity divided by throughput. The public debate
+has been about the numerator (138 or 204 TWh a year); this figure holds it fixed and moves the
+denominator, the only term a protocol can change.
+
 ## The model
 
 Proof-of-work electricity is set by the block reward, not by usage, so the numerator is
@@ -31,7 +46,8 @@ The ratio between the chains does not depend on which electricity estimate you u
 
 - `index.html` – the interactive figure. Toggle between the Cambridge and Digiconomist
   estimates; hover or focus the plot and use ← → to read any throughput. Values are also in
-  the table below the figure.
+  the table below the figure. The **Download SVG** and **Download PNG** buttons save the figure
+  as shown, with the fonts embedded (PNG at 3×, 2700 × 1740).
 - `export/nexa-vs-bitcoin-energy-per-tx.png` – static light version (2400 × 1780) for articles.
 - `export/nexa-vs-bitcoin-energy-per-tx-dark.png` – dark variant.
 - `scripts/render-png.sh` – regenerates both PNGs from `index.html` with headless Chrome.
