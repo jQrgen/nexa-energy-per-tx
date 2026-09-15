@@ -41,14 +41,11 @@ Query parameters on the page: `?export=1` shows only the figure and caption at 1
 
 ## Deployment
 
-Every push to `main` runs `.github/workflows/pages.yml`, which uploads the repository root as a
-static site and deploys it to GitHub Pages. No build step: the page is a single HTML file with
-inline CSS and JavaScript, and loads its fonts (Old Standard TT, Roboto) from Google Fonts.
-
-One-time setup for a fresh fork or clone: in the repository settings open **Pages** and set
-*Build and deployment → Source* to **GitHub Actions**. The workflow asks GitHub to enable Pages
-by itself, but the default `GITHUB_TOKEN` is not allowed to do that on a user repository, so the
-first run fails until Pages has been switched on once. Re-run the workflow after that.
+Every push to `main` runs `.github/workflows/pages.yml`, which mirrors `main` into the
+`gh-pages` branch. GitHub Pages serves that branch as a static site, so the live page always
+matches the latest commit on `main`. No build step: the page is a single HTML file with inline
+CSS and JavaScript, and loads its fonts (Old Standard TT, Roboto) from Google Fonts. The
+`.nojekyll` file tells Pages to serve the files as they are.
 
 ## Sources
 
