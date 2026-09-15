@@ -39,6 +39,8 @@ kWh per transaction = network electricity per second ÷ TPS
 
 Below Bitcoin's throughput cap (~7 TPS, 7–14 theoretical) the two chains coincide. Beyond it
 Bitcoin stays flat because the protocol cannot add throughput; Nexa continues along 1/TPS.
+Both axes of the figure are logarithmic, each gridline a factor of ten, so the 13 000× gap spans only
+four gridlines and looks far smaller than it is.
 
 ## Files
 

@@ -114,7 +114,7 @@ td .st{font-size:11.5px;color:var(--muted);margin-left:8px}
   <header class="intro">
     <h1>Same joules, different denominator</h1>
     <p>Nexa is a proof-of-work blockchain in the Bitcoin lineage: the same UTXO accounting and the same kind of mining, but engineered for throughput on the base layer, with native tokens and script-template contracts instead of a second layer. Its bottlenecks are the ones every UTXO chain hits on general-purpose CPUs, signature checks and coin lookups. Nexa benchmarks 42 000 transactions per second today; Blitz moves those two steps onto FPGAs, with a projected 100 000 TPS.</p>
-    <p>This figure accompanies the article <em>1 Bitcoin transaction: 580 kWh. 1 Nexa transaction with Blitz: 0.044 kWh.</em> Its argument is arithmetic. A proof-of-work network burns whatever the block reward pays for, however many transactions it carries, so energy per transaction is network electricity divided by throughput. Ten years of debate have been about the numerator. The figure fixes it at the Cambridge estimate, 138 TWh a year, and moves the denominator, the only term a protocol can change.</p>
+    <p>This figure accompanies the article <em>1 Bitcoin transaction: 580 kWh. 1 Nexa transaction with Blitz: 0.044 kWh.</em> Its argument is arithmetic. A proof-of-work network burns whatever the block reward pays for, however many transactions it carries, so energy per transaction is network electricity divided by throughput. Ten years of debate have been about the numerator. The figure fixes it at the Cambridge estimate, 138 TWh a year, and moves the denominator, the only term a protocol can change. Read the axes before the lines: both are logarithmic, each gridline a factor of ten, which squeezes a 13 000× gap into four gridlines.</p>
   </header>
   <div class="controls">
     <div class="dl" aria-label="Download the figure">
@@ -127,7 +127,7 @@ td .st{font-size:11.5px;color:var(--muted);margin-left:8px}
     <div class="fig" id="fig">
       <svg id="chart" viewBox="0 0 900 580" role="img" tabindex="0" aria-labelledby="figtitle figdesc">
         <title id="figtitle">Energy per transaction versus throughput for Bitcoin and Nexa, log–log</title>
-        <desc id="figdesc">Both chains share one line up to Bitcoin's throughput cap near 7 transactions per second. Bitcoin then stays flat at about 580 kWh per transaction. Nexa continues along one over TPS: 0.104 kWh at 42 000 TPS and 0.044 kWh at 100 000 TPS with Blitz. Values are repeated in the table below the figure.</desc>
+        <desc id="figdesc">Both chains share one line up to Bitcoin's throughput cap near 7 transactions per second. Bitcoin then stays flat at about 580 kWh per transaction. Nexa continues along one over TPS: 0.104 kWh at 42 000 TPS and 0.044 kWh at 100 000 TPS with Blitz. Both axes are logarithmic. Values are repeated in the table below the figure.</desc>
         <g id="layer"></g>
         <g id="hover" hidden>
           <line id="xhair" class="xhair"/>
@@ -236,14 +236,16 @@ td .st{font-size:11.5px;color:var(--muted);margin-left:8px}
     function tickY(yy,len){ return '<line class="tk" y1="'+yy+'" y2="'+yy+'" x1="'+M.l+'" x2="'+(M.l+len)+'"/><line class="tk" y1="'+yy+'" y2="'+yy+'" x1="'+right+'" x2="'+(right-len)+'"/>'; }
     for (d=XD[0]; d<=XD[1]; d++){ x=sx(Math.pow(10,d)); s+=tickX(x,6); s+=pow10(x, bottom+19, d, 'middle'); if(d<XD[1]) for(m=2;m<10;m++) s+=tickX(sx(m*Math.pow(10,d)),3); }
     for (d=YD[0]; d<=YD[1]; d++){ y=sy(Math.pow(10,d)); s+=tickY(y,6); s+=pow10(M.l-9, y+4, d, 'end'); if(d<YD[1]) for(m=2;m<10;m++) s+=tickY(sy(m*Math.pow(10,d)),3); }
-    s+=text(M.l+PW/2, H-12, 'Throughput [TPS]', 'axl', 'middle');
-    s+='<text class="axl" text-anchor="middle" transform="translate(20 '+(M.t+PH/2)+') rotate(-90)">Energy per transaction [kWh]</text>';
+    s+=text(M.l+PW/2, H-12, 'Throughput [TPS], logarithmic scale: each gridline is ×10', 'axl', 'middle');
+    s+='<text class="axl" text-anchor="middle" transform="translate(20 '+(M.t+PH/2)+') rotate(-90)">Energy per transaction [kWh], logarithmic scale: each gridline is ×10</text>';
 
     // bracket at 100 000 TPS
     s+='<path class="bracket" d="M'+(xB-4)+' '+(yK+9)+' h8 M'+xB+' '+(yK+9)+' V'+(yB-11)+' M'+(xB-4)+' '+(yB-11)+' h8"/>';
     var yMid=(yK+yB)/2;
     s+=text(xB+10, yMid+2, fmtRatio(NEXA_BLITZ/BTC_TPS), 'ann-b');
     s+=text(xB+10, yMid+18, 'less energy per tx', 'ann-i');
+    s+=text(xB+10, yMid+34, 'four gridlines here,', 'ann-i');
+    s+=text(xB+10, yMid+48, 'each a factor of ten', 'ann-i');
 
     // markers
     s+='<circle cx="'+xK+'" cy="'+yK+'" r="3.6" fill="var(--btc)"/>';
@@ -274,7 +276,7 @@ td .st{font-size:11.5px;color:var(--muted);margin-left:8px}
     cap.textContent = '';
     var b = document.createElement('b'); b.textContent = 'Figure 1. ';
     cap.appendChild(b);
-    cap.appendChild(document.createTextNode('Energy per transaction as a function of throughput for Bitcoin and Nexa at the same network consumption, '+energy+' TWh/yr ('+E.src+'), so that E = '+kStr+' kWh ÷ TPS. Below Bitcoin’s throughput cap the two chains coincide. Beyond it Bitcoin remains at '+fmtKwh(kwh(BTC_TPS))+' kWh per transaction, whereas Nexa follows 1/TPS to '+fmtKwh(kwh(NEXA_NOW))+' kWh at '+group(NEXA_NOW)+' TPS (benchmarked) and '+fmtKwh(kwh(NEXA_BLITZ))+' kWh at '+group(NEXA_BLITZ)+' TPS with Blitz (projected), a factor of '+fmtRatio(NEXA_BLITZ/BTC_TPS)+'. Log–log axes.'));
+    cap.appendChild(document.createTextNode('Energy per transaction as a function of throughput for Bitcoin and Nexa at the same network consumption, '+energy+' TWh/yr ('+E.src+'), so that E = '+kStr+' kWh ÷ TPS. Below Bitcoin’s throughput cap the two chains coincide. Beyond it Bitcoin remains at '+fmtKwh(kwh(BTC_TPS))+' kWh per transaction, whereas Nexa follows 1/TPS to '+fmtKwh(kwh(NEXA_NOW))+' kWh at '+group(NEXA_NOW)+' TPS (benchmarked) and '+fmtKwh(kwh(NEXA_BLITZ))+' kWh at '+group(NEXA_BLITZ)+' TPS with Blitz (projected), a factor of '+fmtRatio(NEXA_BLITZ/BTC_TPS)+'. Both axes are logarithmic: every gridline is a factor of ten, so the '+fmtRatio(NEXA_BLITZ/BTC_TPS)+' gap between the chains spans only four gridlines and looks far smaller than it is.'));
     document.getElementById('tBtc').textContent = fmtKwh(kwh(BTC_TPS));
     document.getElementById('tNow').textContent = fmtKwh(kwh(NEXA_NOW));
     document.getElementById('tBl').textContent = fmtKwh(kwh(NEXA_BLITZ));
